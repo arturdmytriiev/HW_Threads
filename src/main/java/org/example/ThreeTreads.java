@@ -8,46 +8,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ThreeTreads {
     AtomicInteger current = new AtomicInteger(1);
-    BlockingQueue<String> queue = new LinkedBlockingQueue<>();
-    int n ;
+    int n;
 
-    public ThreeTreads(int n)
-    {
+    public ThreeTreads(int n) {
         this.n = n;
     }
 
-    public void fizz()
-    {
-        while(current.get() < n)
-        {
-            if(current.get() % 3 == 0 && current.get() % 5 !=0)
-            {
-                try
-                {
-                    queue.put("fizz");
+    public void fizz() {
+        while (current.get() < n) {
+            if (current.get() % 3 == 0 && current.get() % 5 != 0) {
+                try {
+                    System.out.print("fizz\n");
                     current.incrementAndGet();
-                }
-                catch (InterruptedException e)
-                {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        }
-    }
-    public void buzz()
-    {
-        while(current.get() <= n)
-        {
-            if(current.get()%3!=0 && current.get()%5==0)
-            {
-                try
-                {
-                    queue.put("buzz");
-                    current.incrementAndGet();
-                }
-                catch (InterruptedException e)
-                {
+                    Thread.sleep(2000);
+                } catch (Exception e) {
                     Thread.currentThread().interrupt();
                     break;
                 }
@@ -55,19 +29,29 @@ public class ThreeTreads {
         }
     }
 
-    public void buzzfizz()
-    {
-        while(current.get() <= n)
-        {
-            if(current.get()%3==0 && current.get()%5 ==0)
-            {
-                try
-                {
-                    queue.put("buzzfizz");
+    public void buzz() {
+        while (current.get() <= n) {
+            if (current.get() % 3 != 0 && current.get() % 5 == 0) {
+                try {
+                    System.out.print("buzz\n");
                     current.incrementAndGet();
+                    Thread.sleep(2000);
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                    break;
                 }
-                catch(InterruptedException e)
-                {
+            }
+        }
+    }
+
+    public void buzzfizz() {
+        while (current.get() <= n) {
+            if (current.get() % 3 == 0 && current.get() % 5 == 0) {
+                try {
+                    System.out.print("buzzfizz\n");
+                    current.incrementAndGet();
+                    Thread.sleep(2000);
+                } catch (Exception e) {
                     Thread.currentThread().interrupt();
                     break;
                 }
@@ -76,68 +60,44 @@ public class ThreeTreads {
     }
 
 
-
-    public void numbers()
-    {
-           while(current.get()<=n)
-           {
-               int num = current.get();
-               if(num  %3 != 0 && num %5 !=0 ) {
-                   try {
-                      queue.put(String.valueOf(num));
-                      current.incrementAndGet();
-                   } catch (InterruptedException e) {
-                       Thread.currentThread().interrupt();
-                       break;
-                   }
-               }
-           }
-    }
-
-    public void print()
-    {
-        while(current.get() <= n || !queue.isEmpty())
-        {
-            try
-            {
-                String value = queue.take();
-                System.out.println(value);
-            }
-            catch (InterruptedException e)
-            {
-                Thread.currentThread().interrupt();
-                return;
+    public void numbers() {
+        while (current.get() <= n) {
+            int num = current.get();
+            if (num % 3 != 0 && num % 5 != 0) {
+                try {
+                    System.out.printf(num +"\n");
+                    current.incrementAndGet();
+                    Thread.sleep(2000);
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
         }
     }
-
-
 
     public static void main(String[] args) {
         System.out.println("Write number from 1 to n count of numbers");
         Scanner sc = new Scanner(System.in);
-        int num  = sc.nextInt();
+        int num = sc.nextInt();
         ThreeTreads threeTreads = new ThreeTreads(num);
-        Thread A = new Thread (threeTreads::fizz);
-        Thread B = new Thread (threeTreads::buzz);
-        Thread C = new Thread (threeTreads::buzzfizz);
-        Thread D = new Thread (threeTreads::numbers);
+        Thread A = new Thread(threeTreads::fizz);
+        Thread B = new Thread(threeTreads::buzz);
+        Thread C = new Thread(threeTreads::buzzfizz);
+        Thread D = new Thread(threeTreads::numbers);
         A.start();
         B.start();
         C.start();
         D.start();
 
-        try
-        {
+        try {
             A.join();
             B.join();
             C.join();
             D.join();
-        }
-        catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        threeTreads.print();
+
     }
 }
